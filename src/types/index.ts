@@ -8,7 +8,7 @@ export interface Post {
 }
 
 export interface Comment {
-  id: string;
+  id: number;
   postId: number;
   content: string;
   author: string;

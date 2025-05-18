@@ -5,7 +5,22 @@
     "author": "Дмитро Корнійчук",
     "date": "2025-05-17",
     "content": "Це приклад першого поста...",
-    "comments": []
+    "comments": [
+      {
+        "content": "bxcbxbcxbcxbxcbxcbxcbxbcxbxcbcxb",
+        "author": "sdfgdfdbscbxc",
+        "id": 1,
+        "date": "2025-05-18",
+        "postId": "1"
+      },
+      {
+        "content": "bcxbcxbcxb",
+        "author": "dvxcbcbxcbxc",
+        "id": 2,
+        "date": "2025-05-18",
+        "postId": "1"
+      }
+    ]
   },
   {
     "id": "2",
@@ -14,5 +29,12 @@
     "date": "2025-05-17",
     "content": "Це приклад другого поста...",
     "comments": []
+  },
+  {
+    "postId": "1",
+    "comment": {
+      "content": "323232323232323",
+      "author": "івма"
+    }
   }
 ]

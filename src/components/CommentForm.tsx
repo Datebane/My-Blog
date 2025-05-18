@@ -15,7 +15,7 @@ interface CommentFormProps {
 const CommentForm = ({ postId }: CommentFormProps) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({ content: "", author: "" });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,14 +26,14 @@ const CommentForm = ({ postId }: CommentFormProps) => {
           ...acc,
           [issue.path[0]]: issue.message,
         }),
-        {}
+        {} as Record<string, string>
       );
       setErrors(errorMessages);
       return;
     }
 
-    // Відправка коментаря на API
     try {
+      // (опціонально) відправити на API
       const response = await fetch("/api/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,8 +42,17 @@ const CommentForm = ({ postId }: CommentFormProps) => {
 
       if (!response.ok) throw new Error("Failed to add comment");
 
-      // Якщо API успішно зберегло коментар, оновлюємо Redux
-      dispatch(addComment({ postId, comment: formData }));
+      // Диспатчимо з форматом, який приймає blogSlice
+      dispatch(
+        addComment({
+          postId,
+          comment: {
+            content: formData.content,
+            author: formData.author,
+          },
+        })
+      );
+
       setFormData({ content: "", author: "" });
       setErrors({});
     } catch (error) {

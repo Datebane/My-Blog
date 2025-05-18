@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Post, Comment, User } from "../types";
+import { Post, User } from "../types";
 
 interface BlogState {
   posts: Post[];
   filter: string;
   currentUser: User | null;
-  users: User[]; // Додаємо список користувачів
+  users: User[];
 }
 
 const initialState: BlogState = {
@@ -49,6 +49,7 @@ const blogSlice = createSlice({
       state.posts.push(newPost);
       savePostsToLocalStorage(state.posts);
     },
+
     deletePost: (state, action: PayloadAction<number>) => {
       const post = state.posts.find((p) => p.id === action.payload);
       if (post && state.currentUser?.username === post.author) {
@@ -56,6 +57,7 @@ const blogSlice = createSlice({
         savePostsToLocalStorage(state.posts);
       }
     },
+
     editPost: (
       state,
       action: PayloadAction<{ id: number; title: string; content: string }>
@@ -67,13 +69,18 @@ const blogSlice = createSlice({
         savePostsToLocalStorage(state.posts);
       }
     },
+
+    // 🛠️ ОНОВЛЕНО: PayloadAction приймає лише content та author
     addComment: (
       state,
-      action: PayloadAction<{ postId: number; comment: Comment }>
+      action: PayloadAction<{
+        postId: number;
+        comment: { content: string; author: string };
+      }>
     ) => {
       const post = state.posts.find((p) => p.id === action.payload.postId);
       if (post) {
-        const newComment: Comment = {
+        const newComment = {
           ...action.payload.comment,
           id: post.comments.length + 1,
           date: new Date().toISOString().split("T")[0],
@@ -82,19 +89,23 @@ const blogSlice = createSlice({
         savePostsToLocalStorage(state.posts);
       }
     },
+
     setFilter: (state, action: PayloadAction<string>) => {
       state.filter = action.payload;
     },
+
     initializePosts: (state, action: PayloadAction<Post[]>) => {
       state.posts = action.payload;
       savePostsToLocalStorage(state.posts);
     },
+
     setCurrentUser: (state, action: PayloadAction<User | null>) => {
       state.currentUser = action.payload;
       if (typeof window !== "undefined") {
         localStorage.setItem("currentUser", JSON.stringify(action.payload));
       }
     },
+
     registerUser: (state, action: PayloadAction<User>) => {
       state.users.push(action.payload);
       saveUsersToLocalStorage(state.users);
@@ -112,4 +123,5 @@ export const {
   setCurrentUser,
   registerUser,
 } = blogSlice.actions;
+
 export default blogSlice.reducer;
